@@ -1,14 +1,20 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import theme from "../theme/theme";
-import { authService } from "../services/authService";
+import { Navigate, useNavigate } from "react-router-dom";
+import theme from "../../theme/theme";
+import { authService } from "../../services/authService";
+import { useAuthStore } from "../../store/authStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { isAuthenticated, user } = useAuthStore();
   const navigate = useNavigate();
+
+  if (isAuthenticated && user?.role === "admin") {
+    return <Navigate to="/admin/products" replace />;
+  }
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,17 +22,13 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const { user } = await authService.singInWithEmail(email, password);
-      const profile = await authService.getCurrentUser();
+      await authService.signInWithEmail(email, password);
 
-      if (!profile || profile.role !== "admin") {
-        setError("Access denied. Admin privileges required.");
-        setLoading(false);
-        return;
+      if (useAuthStore.getState().user?.role === 'admin') {
+        navigate("/admin/dashboard");
+      } else {
+        setError("You are not authorized to access this portal.");
       }
-
-      // ✅ Successful admin login
-      navigate("/admin");
     } catch (err: any) {
       setError(err.message || "Login failed. Please try again.");
     } finally {

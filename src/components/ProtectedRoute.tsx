@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
 import { authService } from "../services/authService";
 
 interface ProtectedRouteProps {
@@ -7,19 +8,18 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const { user, isAuthenticated, loading } = useAuthStore();
 
   useEffect(() => {
-    const verify = async () => {
-      const user = await authService.getCurrentUser();
-      setAuthorized(user?.role == "admin");
-    };
-
-    verify();
+    if (!user) {
+      authService.getCurrentUser(); // sets user in store
+    }
   }, []);
 
-  if (authorized === null) return <div className="p-8">Checking access...</div>;
-  if (!authorized) return <Navigate to="/admin/login" replace />;
+  if (loading) return <div className="p-8">Checking access...</div>;
+  if (!isAuthenticated || user?.role !== "admin") {
+    return <Navigate to="/admin/login" replace />;
+  }
 
   return <>{children}</>;
 }
