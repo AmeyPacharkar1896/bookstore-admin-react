@@ -38,6 +38,16 @@ function App() {
           }
         />
 
+        <Route
+          path="/admin/products/edit/:id"
+          element={
+            <ProtectedRoute>
+              <AddProduct isEdit={true} />
+            </ProtectedRoute>
+          }
+        />
+
+
         <Route path="/admin/orders" element={<ComingSoon title="Order Management" />} />
         <Route path="/admin/reviews" element={<ComingSoon title="Review Management" />} />
         <Route path="/admin/users" element={<ComingSoon title="User Management" />} />

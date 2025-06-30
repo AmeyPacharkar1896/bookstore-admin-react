@@ -4,10 +4,12 @@ import { productService } from "../services/productService";
 
 interface ProductState {
   products: Product[];
+  selectedProduct: Product | null;
   loading: boolean;
   error: string | null;
 
   fetchAllProducts: () => Promise<void>;
+  fetchProductById: (id: string) => Promise<void>;
   addProduct: (newProduct: NewProduct) => Promise<void>;
   deleteProduct: (productId: string) => Promise<void>;
   updateProduct: (productId: string, data: UpdateProduct) => Promise<void>;
@@ -15,6 +17,7 @@ interface ProductState {
 
 export const useProductStore = create<ProductState>((set) => ({
   products: [],
+  selectedProduct: null,
   loading: false,
   error: null,
 
@@ -29,14 +32,25 @@ export const useProductStore = create<ProductState>((set) => ({
     }
   },
 
+  fetchProductById: async (id) => {
+    set({ loading: true, error: null, selectedProduct: null });
+    try {
+      const product = await productService.getProductById(id);
+      set({ selectedProduct: product, loading: false });
+    } catch (err) {
+      console.error("Fetch product by ID error:", err);
+      set({ error: "Failed to fetch product.", loading: false });
+    }
+  },
+
   addProduct: async (newProduct) => {
-    set({ error: null }); // Clear any existing error
+    set({ error: null });
     try {
       const created = await productService.createProduct(newProduct);
       if (!created) throw new Error("No product returned from API");
 
       set((state) => ({
-        products: [created, ...state.products], // Add to the top
+        products: [created, ...state.products],
       }));
     } catch (err) {
       console.error("Add product error:", err);

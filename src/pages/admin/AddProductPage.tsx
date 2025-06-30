@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import theme from "../../theme/theme";
-import { uploadToCloudinary } from "../../utils/uploadToCloudinary"; // 👈 import utility function
+import { uploadToCloudinary } from "../../utils/uploadToCloudinary";
 
-export default function AddProduct() {
+export default function AddProduct({ isEdit = false }: { isEdit?: boolean }) {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { addProduct } = useProductStore();
+  const { addProduct, updateProduct, fetchProductById, selectedProduct } = useProductStore();
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -24,7 +25,7 @@ export default function AddProduct() {
     if (!title) newErrors.title = "This field is required.";
     if (!author) newErrors.author = "This field is required.";
     if (!price || isNaN(Number(price))) newErrors.price = "Must be a valid number.";
-    if (!imageFile) newErrors.image = "Please upload an image.";
+    if (!imagePreview && !imageFile) newErrors.image = "Please upload an image.";
     return newErrors;
   };
 
@@ -46,17 +47,27 @@ export default function AddProduct() {
 
     setSaving(true);
     try {
-      const cover_url = await uploadToCloudinary(imageFile!); // ✅ use shared utility
+      let cover_url = imagePreview || "";
+      if (imageFile) {
+        cover_url = await uploadToCloudinary(imageFile);
+      }
 
-      await addProduct({
+      const payload = {
         title,
         author,
         price: Number(price),
         product_type: productType,
         cover_url,
-      });
+      };
 
-      setSuccessMsg("Product saved successfully!");
+      if (isEdit && id) {
+        await updateProduct(id, payload);
+        setSuccessMsg("Product updated successfully!");
+      } else {
+        await addProduct(payload);
+        setSuccessMsg("Product added successfully!");
+      }
+
       setTimeout(() => navigate("/admin/products"), 1500);
     } catch (error) {
       console.error("Image upload error:", error);
@@ -64,6 +75,23 @@ export default function AddProduct() {
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    if (isEdit && id) {
+      console.log(isEdit, id);
+      fetchProductById(id); // async fetch, sets selectedProduct
+    }
+  }, [isEdit, id]);
+
+  useEffect(() => {
+    if (isEdit && selectedProduct) {
+      setTitle(selectedProduct.title);
+      setAuthor(selectedProduct.author);
+      setPrice(selectedProduct.price.toString());
+      setProductType(selectedProduct.product_type);
+      setImagePreview(selectedProduct.cover_url);
+    }
+  }, [selectedProduct, isEdit]);
 
   return (
     <div style={{ display: "flex", height: "100vh", backgroundColor: theme.colors.adminCanvasGrey }}>
@@ -92,7 +120,7 @@ export default function AddProduct() {
             ← Back
           </button>
           <h1 style={{ fontSize: theme.fontSizes.h1, color: theme.colors.adminInk, fontWeight: theme.fontWeight.bold }}>
-            Add New Product
+            {isEdit ? "Edit Product" : "Add New Product"}
           </h1>
           <div />
         </div>
@@ -120,7 +148,6 @@ export default function AddProduct() {
               Basic Product Information
             </h2>
 
-            {/* Fields */}
             <FormField label="Title" value={title} onChange={setTitle} error={errors.title} />
             <FormField label="Author" value={author} onChange={setAuthor} error={errors.author} />
             <FormField label="Price" value={price} onChange={setPrice} error={errors.price} type="number" />
@@ -131,15 +158,13 @@ export default function AddProduct() {
                 <input
                   type="checkbox"
                   checked={productType === "digital"}
-                  onChange={(e) =>
-                    setProductType(e.target.checked ? "digital" : "physical")
-                  }
+                  onChange={(e) => setProductType(e.target.checked ? "digital" : "physical")}
                 />
                 Digital Product
               </label>
             </div>
 
-            {/* Image */}
+            {/* Image Upload */}
             <div style={{ marginBottom: "1rem" }}>
               <label style={labelStyle}>Upload Image</label>
               <input type="file" accept="image/*" onChange={handleImageChange} />
@@ -176,7 +201,7 @@ export default function AddProduct() {
                 marginTop: "1.5rem",
               }}
             >
-              {saving ? "Saving..." : "Save Product"}
+              {saving ? "Saving..." : isEdit ? "Update Product" : "Save Product"}
             </button>
 
             {successMsg && (
@@ -198,7 +223,7 @@ export default function AddProduct() {
   );
 }
 
-// Reusable form field
+// Reusable input
 function FormField({
   label,
   value,

@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import theme from "../../theme/theme";
 
 
 export default function ProductTable() {
+  const navigate = useNavigate();
   const products = useProductStore((s) => s.products);
 
   return (
@@ -71,12 +73,19 @@ export default function ProductTable() {
                 <td style={tableCellStyle}>{product.author}</td>
                 <td style={tableCellStyle}>₹{new Intl.NumberFormat("en-IN").format(product.price)}</td>
                 <td style={{ ...tableCellStyle, textAlign: "right" }}>
-                  <a
-                    href={`/admin/products/${product.id}/edit`}
-                    style={{ color: theme.colors.deepTeal, marginRight: "1rem" }}
+                  <button
+                    onClick={() => navigate(`/admin/products/edit/${product.id}`)}
+                    style={{
+                      color: theme.colors.deepTeal,
+                      marginRight: "1rem",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
                   >
                     ✏️
-                  </a>
+                  </button>
+
                   <button
                     onClick={() => alert("Delete logic pending")}
                     style={{ color: theme.colors.errorRed, background: "none", border: "none" }}
