@@ -1,11 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { useProductStore } from "../../store/productStore";
 import theme from "../../theme/theme";
+import toast from "react-hot-toast";
 
 
 export default function ProductTable() {
   const navigate = useNavigate();
   const products = useProductStore((s) => s.products);
+  const deleteProduct = useProductStore((s) => s.deleteProduct);
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteProduct(id);
+      toast.success("Product deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete product.");
+      console.error(error);
+    }
+  };
 
   return (
     <div
@@ -87,7 +102,7 @@ export default function ProductTable() {
                   </button>
 
                   <button
-                    onClick={() => alert("Delete logic pending")}
+                    onClick={() => handleDelete(product.id)}
                     style={{ color: theme.colors.errorRed, background: "none", border: "none" }}
                   >
                     🗑️
