@@ -19,7 +19,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }, []);
 
   if (authorized === null) return <div className="p-8">Checking access...</div>;
-  if (!authorized) return <Navigate to="/" replace />;
+  if (!authorized) return <Navigate to="/admin/login" replace />;
 
   return <>{children}</>;
 }

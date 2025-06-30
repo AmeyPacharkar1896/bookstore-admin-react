@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -16,6 +16,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/" element={<Navigate to="/admin/login" replace />} />
+        <Route path="*" element={<div className="p-8 text-center">404 Not Found</div>} />
       </Routes>
     </BrowserRouter>
   );
