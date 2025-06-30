@@ -7,6 +7,7 @@ import ProductsPage from "./pages/admin/ProductsPage";
 import AddProduct from "./pages/admin/AddProductPage";
 import { useEffect } from "react";
 import { authService } from "./services/authService";
+import ComingSoon from "./pages/ComingSoon";
 
 function App() {
   useEffect(() => {
@@ -36,6 +37,10 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/admin/orders" element={<ComingSoon title="Order Management" />} />
+        <Route path="/admin/reviews" element={<ComingSoon title="Review Management" />} />
+        <Route path="/admin/users" element={<ComingSoon title="User Management" />} />
 
         {/* Optional Redirect from dashboard to products */}
         <Route
