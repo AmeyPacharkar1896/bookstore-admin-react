@@ -12,7 +12,7 @@ This repository contains the **React-based Admin Dashboard** for a complete full
 
 You can test the live, deployed admin dashboard using the credentials below.
 
--   **Live Site:** **[bookstore-admin.vercel.app](https://bookstore-admin-jvs6.onrender.com/admin/login)**
+-   **Live Site:** **[bookstore-admin.vercel.app](https://bookstore-admin-jvs6.onrender.com)**
 -   **Email:** `recruiter@demo.com`
 -   **Password:** `password123`
 
