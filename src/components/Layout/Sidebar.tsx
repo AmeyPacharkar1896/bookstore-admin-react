@@ -1,8 +1,11 @@
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/authStore";
 import theme from "../../theme/theme";
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const logout = useAuthStore((s) => s.logout);
 
   const navItems = [
     { label: "Products", path: "/admin/products", icon: "📚" },
@@ -20,43 +23,67 @@ export default function Sidebar() {
         display: "flex",
         flexDirection: "column",
         padding: "2rem 1rem",
-        gap: "1rem",
       }}
     >
-      <h2
+      <div>
+        <h2
+          style={{
+            fontSize: theme.fontSizes.h2,
+            marginBottom: "2rem",
+            fontWeight: theme.fontWeight.bold,
+            color: theme.colors.navWhite,
+          }}
+        >
+          Bookstore Admin
+        </h2>
+
+        {navItems.map((item) => {
+          const isActive = location.pathname.startsWith(item.path);
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                padding: "0.75rem 1rem",
+                borderRadius: theme.borderRadius.button,
+                textDecoration: "none",
+                backgroundColor: isActive ? theme.colors.deepTeal : "transparent",
+                color: theme.colors.navWhite,
+                fontWeight: isActive ? theme.fontWeight.semiBold : "normal",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </NavLink>
+          );
+        })}
+      </div>
+
+      {/* Logout button at the bottom */}
+      <button
+        onClick={() => {
+          logout();
+          navigate("/admin/login");
+        }}
         style={{
-          fontSize: theme.fontSizes.h2,
-          marginBottom: "2rem",
-          fontWeight: theme.fontWeight.bold,
-          color: theme.colors.navWhite,
+          marginTop: "auto",
+          marginBottom: "1rem",
+          padding: "0.75rem 1rem",
+          backgroundColor: "transparent",
+          border: "none",
+          color: theme.colors.errorRed,
+          fontSize: theme.fontSizes.body,
+          fontWeight: theme.fontWeight.semiBold,
+          textAlign: "left",
+          cursor: "pointer",
         }}
       >
-        Bookstore Admin
-      </h2>
-
-      {navItems.map((item) => {
-        const isActive = location.pathname.startsWith(item.path);
-        return (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              padding: "0.75rem 1rem",
-              borderRadius: theme.borderRadius.button,
-              textDecoration: "none",
-              backgroundColor: isActive ? theme.colors.deepTeal : "transparent",
-              color: isActive ? theme.colors.navWhite : theme.colors.navWhite,
-              fontWeight: isActive ? theme.fontWeight.semiBold : "normal",
-            }}
-          >
-            <span>{item.icon}</span>
-            <span>{item.label}</span>
-          </NavLink>
-        );
-      })}
+        🚪 Logout
+      </button>
     </aside>
   );
 }
