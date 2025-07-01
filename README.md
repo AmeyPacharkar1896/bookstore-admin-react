@@ -1,6 +1,6 @@
 # 📘 Bookstore Admin Dashboard (React)
 
-![Bookstore App & Admin Demo](YOUR_DEMO_GIF_URL_HERE)
+![Bookstore App & Admin Demo](https://github.com/user-attachments/assets/ceea7a0c-1b1a-4af0-a6de-09da897c5b1f)
 
 This repository contains the **React-based Admin Dashboard** for a complete full-stack e-commerce platform. This dashboard demonstrates real-world full-stack skills by providing the secure "back office" that powers a seamless mobile shopping experience.
 
