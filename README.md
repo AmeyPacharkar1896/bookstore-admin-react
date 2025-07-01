@@ -1,69 +1,93 @@
-# React + TypeScript + Vite
+# 📘 Bookstore Admin Dashboard (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Bookstore App & Admin Demo](YOUR_DEMO_GIF_URL_HERE)
 
-Currently, two official plugins are available:
+This repository contains the **React-based Admin Dashboard** for a complete full-stack e-commerce platform. This dashboard demonstrates real-world full-stack skills by providing the secure "back office" that powers a seamless mobile shopping experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> **Note:** This is the admin panel. The main, user-facing **Flutter application** can be found here: **[bookstore-flutter-app](https://github.com/AmeyPacharkar1896/bookstore-app-flutter)**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Live Demo & Credentials
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+You can test the live, deployed admin dashboard using the credentials below.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+-   **Live Site:** **[bookstore-admin.vercel.app](https://bookstore-admin-jvs6.onrender.com/admin/login)**
+-   **Email:** `recruiter@demo.com`
+-   **Password:** `password123`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## ✨ Key Features
+
+- ✅ **Secure Admin Authentication:** Full login flow powered by Supabase Auth, with protected routes accessible only to users with an "admin" role.
+- ✅ **Complete Product Management (CRUD):** A full-featured interface to Create, Read, Update, and Delete products, with changes reflecting live in the user app.
+- ✅ **Cloud-Based Media Uploads:** Seamlessly upload and manage product images via Cloudinary, with an in-form image preview for a better UX.
+- ✅ **Efficient State Management:** Built with Zustand for fast, scalable, and boilerplate-free state management, enabling features like instant form pre-fills on edit.
+- ✅ **Clean & Scalable Architecture:** Organized into modular components and services with a centralized theme for consistent and maintainable design.
+
+## 🛠️ Tech Stack
+
+| Category         | Technology                                  |
+| ---------------- | ------------------------------------------- |
+| **Framework**    | React (Vite)                                |
+| **State**        | Zustand                                     |
+| **Backend**      | Supabase (PostgreSQL Database & Auth)       |
+| **Media Storage**| Cloudinary                                  |
+| **Styling**      | Custom CSS-in-JS via `theme.ts`             |
+
+## 👨‍💻 Author
+
+-   **Amey Pacharkar** – [LinkedIn](https://www.linkedin.com/in/amey-pacharkar-28520b307) | [GitHub](https://github.com/AmeyPacharkar1896)
+
+---
+
+<details>
+<summary><b>View Technical Details & Setup Instructions</b></summary>
+<br>
+
+### 📂 Folder Structure
+```bash
+bookstore-admin/
+├── components/ # Reusable UI components (Sidebar, Header)
+├── pages/ # View components for each route
+├── store/ # Zustand state management logic
+├── services/ # API layer for Supabase communication
+├── models/ # TypeScript type definitions
+├── utils/ # Helper functions (e.g., Cloudinary uploads)
+└── theme/ # Centralized design tokens
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 🚀 Getting Started Locally
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+#### Prerequisites
+-   Node.js & npm
+-   A configured Supabase project
+-   A configured Cloudinary account
+
+#### Steps
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/AmeyPacharkar1896/bookstore-admin-react.git
+    cd bookstore-admin-react
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Set up environment variables:**
+    Create a `.env` file in the root and add the following keys:
+    ```
+    VITE_SUPABASE_URL=YOUR_SUPABASE_URL
+    VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_KEY
+    VITE_CLOUD_NAME=YOUR_CLOUDINARY_CLOUD_NAME
+    VITE_UPLOAD_PRESET=YOUR_CLOUDINARY_UPLOAD_PRESET
+    ```
+4.  **Start the development server:**
+    ```bash
+    npm run dev
+    ```
+</details>
+
+---
